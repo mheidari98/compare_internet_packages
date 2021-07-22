@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd  
-      
+import re
 
 def irancell(allow_limited_packs=False):
 
@@ -19,10 +19,10 @@ def irancell(allow_limited_packs=False):
         temp['pack-name'] = (pack.h3.text).replace(u'\xa0', u' ').strip().split("\n")[0].strip()
         temp['data-duration'] = (pack.h3.text).replace(u'\xa0', u' ').strip().split("\n")[1].strip()
         temp['time-range'] = pack.find('div', attrs={"class":"package-card__subtitle"}).text
-        temp['price'] = pack['data-price']
+        temp['price'] = float(pack['data-price']) + float(re.findall(r"\d*", pack['data-tax'])[0])
         temp['volume'] = pack['data-volume']
         pack_json.append(temp)
     if not allow_limited_packs :
         pack_json = list(filter(lambda x : x['time-range'] == "" , pack_json))
-    df = pd.DataFrame.from_dict(pack_json,orient='index',columns=['price'])  
+    df = pd.DataFrame.from_dict(pack_json)  
     return df
