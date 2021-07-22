@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd  
+      
 
 def irancell(allow_limited_packs=False):
 
@@ -22,4 +24,5 @@ def irancell(allow_limited_packs=False):
         pack_json.append(temp)
     if not allow_limited_packs :
         pack_json = list(filter(lambda x : x['time-range'] == "" , pack_json))
-    return pack_json
+    df = pd.DataFrame.from_dict(pack_json,orient='index',columns=['price'])  
+    return df
