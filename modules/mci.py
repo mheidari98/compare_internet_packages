@@ -85,6 +85,6 @@ def MciScrap():
 
     driver.close()
 
-    df1.to_csv("DB/mci.csv", index=False)
+    df1.to_csv("DB/mci.csv", sep=',' , encoding='utf-8-sig', index=False)
 
     return df1, df2 
