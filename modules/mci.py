@@ -42,6 +42,7 @@ def AddItem(df1, df2, MyID, li):
 
     package_price = content[2].find('div').text
     price = int( ''.join( re.match( r'(.*) تومان ', package_price ).group(1).strip().split(',') ) )
+    price *= 1.09 # 9% tax
 
     df2.loc[0 if pd.isnull(df2.index.max()) else df2.index.max() + 1] = [MyID, vol, price]
     return MyID
@@ -84,6 +85,6 @@ def MciScrap():
 
     driver.close()
 
-    df1.to_csv("mci.csv", index=False)
+    df1.to_csv("DB/mci.csv", index=False)
 
     return df1, df2 
