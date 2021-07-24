@@ -3,6 +3,7 @@
 import argparse
 import numpy as np
 import pandas as pd
+from tabulate import tabulate
 from modules.mci import MciScrap
 from modules.irancell import irancell
 from modules.rightel import rightel
@@ -15,7 +16,6 @@ def main() -> None:
 
     budget = int(args.budget)
     provider = args.provider
-    print(provider)
 
     col = ['provider', 'id', 'volume', 'price']
     df = pd.DataFrame(columns = col)
@@ -50,11 +50,11 @@ def main() -> None:
             budget -= row['price']
             count+=1
         if count :
-            print(f"you should buy {count} of package {row['id']} from {row['provider']}")
+            print(f"you should buy {count} package from {row['provider']}")
             if row['provider'] == 'mci' :
-                print( MciInfo.loc[ row['id'] ] )
+                print(tabulate( [MciInfo.loc[ row['id'] ]], headers='keys', tablefmt='psql'))
             elif row['provider'] == 'mtn' :
-                print( df2.loc[ row['id'] ] )
+                print(tabulate( [df2.loc[ row['id'] ]], headers='keys', tablefmt='psql'))
 
 if __name__ == '__main__':
     main()
