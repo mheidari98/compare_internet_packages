@@ -25,4 +25,5 @@ def irancell(allow_limited_packs=False):
     if not allow_limited_packs :
         pack_json = list(filter(lambda x : x['time-range'] == "" , pack_json))
     df = pd.DataFrame.from_dict(pack_json)  
+    df.to_csv("DB/mtn.csv", sep=',' , encoding='utf-8-sig', index=False)
     return df
