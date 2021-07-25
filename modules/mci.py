@@ -16,10 +16,11 @@ def CreateDriver():
 
     return driver
 
-
+blackListWord = [ 'صبحانت', 'نامحدود', 'ویژه']
 def volumePerMeg(package_volume_info):
-    if 'صبحانت' in package_volume_info or 'نامحدود'in package_volume_info :
-        return 0
+    for badWord in blackListWord:
+        if badWord in package_volume_info :
+            return 0
     tmp = package_volume_info.split('بایت')[0].strip()
     val = float( re.match( r'([-+]?\d*\.\d+|\d+) .+', tmp ).group(1) )
     if 'گیگا' in tmp :
