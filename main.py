@@ -33,10 +33,10 @@ def main() -> None:
         df2['volume'] =  df2['volume'].astype(np.float64)
         df = pd.concat([df, df2[col]], ignore_index=True)
 
-    if 'rightel' in provider :
-        df3  = rightel()
-        df3['provider'] = 'rightel'
-        df = pd.concat([df, df3], ignore_index=True)
+    #if 'rightel' in provider :
+    #    df3  = rightel()
+    #    df3['provider'] = 'rightel'
+    #    df = pd.concat([df, df3], ignore_index=True)
 
 
     df['price/meg'] = df['price']/df['volume']

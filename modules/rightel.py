@@ -1,28 +1,51 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import re
+from selenium import webdriver
+import time
+import math
 
+def CreateDriver():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--enable-javascript")
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.headless = True
+
+    driver = webdriver.Chrome(executable_path="./chromedriver.exe", options=options)
+    driver.implicitly_wait(3)
+
+    return driver
 
 def rightel(allow_limited_packs=False):
 
     URL = "https://package.rightel.ir/ExtraPackageSales/ProductListToSales/ShowProduct"
     
-    page = requests.get(URL)
+    driver = CreateDriver()
 
-    soup = BeautifulSoup(page.content, "html.parser")
+    driver.get(URL) 
 
-    results = soup.find_all('div',attrs={"class":"col-md-6 col-xl-4 js-product"})
+    # this is just to ensure that the page is loaded
+    time.sleep(5) 
 
-    pack_json = []
-    for pack in results:
-        temp = {}
-        temp['pack-name'] = (pack.h3.text).replace(u'\xa0', u' ').strip().split("\n")[0].strip()
-        temp['data-duration'] = (pack.h3.text).replace(u'\xa0', u' ').strip().split("\n")[1].strip()
-        temp['time-range'] = pack.find('div', attrs={"class":"package-card__subtitle"}).text
-        temp['price'] = pack['data-price']
-        temp['volume'] = pack['data-volume']
-        pack_json.append(temp)
-    if not allow_limited_packs :
-        pack_json = list(filter(lambda x : x['time-range'] == "" , pack_json))
-    df = pd.DataFrame.from_dict(pack_json,orient='index',columns=['price'])  
+    html_doc = driver.page_source
+    soup = BeautifulSoup(html_doc, 'html5lib')
+
+    df = pd.DataFrame(columns = ['type', 'package_volume_info', 'package_price', 'ussd_code_block'])
+
+    packageTypes = ['pack-grid-item prepaid', 'pack-grid-item postpaid', 'pack-grid-item data']
+
+    for pType in packageTypes :
+        packages = soup.find_all('div',attrs={"class":pType})
+        for package in packages :
+            package_type = package.find('span').text
+            package_volume_info = package.find('h2').text
+            package_price_rial = package.find('span', class_='fix').text 
+            try :
+                ussd_code_block = package.find('span', class_='code').text 
+            except :
+                ussd_code_block = ''
+            df.loc[0 if pd.isnull(df.index.max()) else df.index.max() + 1] = \
+                        [package_type, package_volume_info, package_price_rial, ussd_code_block]
+
     return df
