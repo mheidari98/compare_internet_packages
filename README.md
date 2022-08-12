@@ -10,7 +10,7 @@
 - use virtual environments & install requirements packages ([gist](https://gist.github.com/mheidari98/8ae29b88bd98f8f59828b0ec112811e7)) 
 - Chrome web driver : Download it from the address below and Put it next to the main.py in the base folder 
   ```
-  Chrome:    https://sites.google.com/a/chromium.org/chromedriver/downloads
+  Chrome:    https://sites.google.com/chromium.org/driver/downloads
   ```
 
  ---
