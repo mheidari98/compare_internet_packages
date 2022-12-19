@@ -29,4 +29,4 @@
 ## Task-Lists
 - [x] support Hamrahe Aval (MCI)
 - [x] support Irancell (MTN)
-- [ ] support RighTel 
+- [x] support RighTel 
